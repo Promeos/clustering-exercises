@@ -23,8 +23,8 @@ def get_zillow_data():
     If the zillow data does not exist in the current directory, it queries Codeup's database for the dataset.
     A local copy will be created as a csv file in the current directory for future use.
     '''
-    if sql_query == None:
-    sql_query = '''
+    
+    sql_query ='''
     select *
     from properties_2017
     join(select parcelid,
