@@ -43,6 +43,15 @@ def handle_missing_values(df, prop_required_column =.75, prop_required_row =.75)
     '''
     
     '''
+    
+    # drop columns
+    df.drop(columns=['calculatedbathnbr', 'id', 'finishedsquarefeet12',
+                     'propertylandusetypeid', 'fullbathcnt'
+                    ],
+            inplace=True)
+    #drop properties with no restrooms or bedrooms
+    df = df[(df.bedroomcnt > 0) & (df.bathroomcnt > 0)]
+    
     # Threshold variable holds the equivalent of 75% of total rows in a dataframe
     threshold = int(round(prop_required_column*len(df.index),0))
     df.dropna(axis=1, thresh=threshold, inplace=True)
@@ -53,14 +62,38 @@ def handle_missing_values(df, prop_required_column =.75, prop_required_row =.75)
     return df
 
 
-def impute_missing_data(train, validate, test, columns_to_impute, strategy='median'):
+def impute_missing_data(train, validate, test):
     '''
     
     '''
-    imputer = SimpleImputer(strategy=strategy)
+    numerical_columns = [
+    'calculatedfinishedsquarefeet',
+    'lotsizesquarefeet',
+    'structuretaxvaluedollarcnt',
+    'taxvaluedollarcnt',
+    'landtaxvaluedollarcnt',
+    'taxamount'
+]
     
-    train[columns_to_impute] = imputer.fit_transform(train[columns_to_impute])
-    validate[columns_to_impute] = imputer.transform(validate[columns_to_impute])
-    test[columns_to_impute] = imputer.transform(test[columns_to_impute])
+    categorical_columns = [
+    "regionidcity",
+    "regionidzip",
+    "yearbuilt",
+    "regionidcity",
+    "censustractandblock"
+]
+    
+    imputer = SimpleImputer(strategy='median')
+    
+    train[numerical_columns] = imputer.fit_transform(train[numerical_columns])
+    validate[numerical_columns] = imputer.transform(validate[numerical_columns])
+    test[numerical_columns] = imputer.transform(test[numerical_columns])
+    
+    
+    imputer = SimpleImputer(strategy='most_frequent')
+    
+    train[categorical_columns] = imputer.fit_transform(train[categorical_columns])
+    validate[categorical_columns] = imputer.transform(validate[categorical_columns])
+    test[categorical_columns] = imputer.transform(test[categorical_columns])
     
     return train, validate, test
