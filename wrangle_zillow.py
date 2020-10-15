@@ -46,7 +46,8 @@ def handle_missing_values(df, prop_required_column =.75, prop_required_row =.75)
     
     # drop columns
     df.drop(columns=['calculatedbathnbr', 'id', 'finishedsquarefeet12',
-                     'propertylandusetypeid', 'fullbathcnt'
+                     'propertylandusetypeid', 'fullbathcnt', 'rawcensustractandblock',
+                     'censustractandblock'
                     ],
             inplace=True)
     #drop properties with no restrooms or bedrooms
@@ -80,8 +81,7 @@ def impute_missing_data(train, validate, test):
     "regionidcity",
     "regionidzip",
     "yearbuilt",
-    "regionidcity",
-    "censustractandblock"
+    "regionidcity"
 ]
     
     imputer = SimpleImputer(strategy='median')
