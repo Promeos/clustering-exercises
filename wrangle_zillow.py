@@ -51,6 +51,7 @@ def handle_missing_values(df, prop_required_column =.75, prop_required_row =.75)
             inplace=True)
     #drop properties with no restrooms or bedrooms
     df = df[(df.bedroomcnt > 0) & (df.bathroomcnt > 0)]
+    df['roomcnt'] = np.where(df.roomcnt==0, df.bathroomcnt + df.bedroomcnt, df.roomcnt)
     
     # Threshold variable holds the equivalent of 75% of total rows in a dataframe
     threshold = int(round(prop_required_column*len(df.index),0))
